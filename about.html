@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HivePure - About Us</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">HivePure</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="process.html">Our Process</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="checkout.html" class="cart-icon">🛒 <span id="cart-count">0</span></a>
+    <div class="menu-icon">&#9776;</div>
+  </nav>
+
+  <!-- About Us Content -->
+  <section class="our-story">
+    <div class="story-content">
+      <h2>Our Story</h2>
+      <div class="story-timeline">
+        
+        <!-- Story Part 1 -->
+        <div class="story-card">
+          <div class="story-img">
+            <img src="images/engineering-student.jpg" alt="Engineering Student">
+          </div>
+          <div class="story-text">
+            <h3>The Unexpected Beginning</h3>
+            <p>In 2025, Ansh—an engineering student—stumbled upon a beekeeping workshop during his summer break. What started as curiosity soon became a passion when he rescued a swarm of bees from his house.</p>
+          </div>
+        </div>
+
+        <!-- Story Part 2 -->
+        <div class="story-card reverse">
+          <div class="story-img">
+            <img src="images/first-hive.jpg" alt="First Beehive">
+          </div>
+          <div class="story-text">
+            <h3>First Hive, First Honey</h3>
+            <p>Using his beekeeping skills, Ansh bought his first hive . After months of care, he harvested some of golden honey—a moment that changed everything.</p>
+          </div>
+        </div>
+
+      
+      </div>
+    </div>
+  </section>
+  <!-- Mission Section (existing content) -->
+  <section class="mission">
+    <!-- Your existing mission content -->
+  </section>
+    <!-- Video Section -->
+    <div class="video-section">
+      <h3>Our Story in Motion</h3>
+      <div class="video-container">
+        <div class="video-scroll">
+          <video controls>
+            <source src="videos/video1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <video controls>
+            <source src="videos/video2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <video controls>
+            <source src="videos/video3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <button class="scroll-button left" onclick="scrollVideos(-1)">&#10094;</button>
+      <button class="scroll-button right" onclick="scrollVideos(1)">&#10095;</button>
+    </div>
+  </section>
+
+  <!-- JavaScript for Video Scrolling -->
+  <script>
+    function scrollVideos(direction) {
+      const videoScroll = document.querySelector('.video-scroll');
+      const scrollAmount = 300; // Adjust scroll distance
+      videoScroll.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  </script>
+</body>

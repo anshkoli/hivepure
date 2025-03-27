@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HivePure - Checkout</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Checkout Page Specific Styles */
+    #checkout {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+    
+    #checkout h2 {
+      color: #d4a017;
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    #checkout h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: #d4a017;
+    }
+    
+    #cart-items {
+      margin: 2rem 0;
+    }
+    
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: rgba(212, 160, 23, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      transition: transform 0.3s ease;
+    }
+    
+    .cart-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .cart-item-info {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .cart-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 5px;
+      border: 1px solid #eee;
+    }
+    
+    .cart-item-details h3 {
+      margin: 0;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    
+    .cart-item-details p {
+      margin: 0.3rem 0 0;
+      color: #d4a017;
+      font-weight: 600;
+    }
+    
+    .remove-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+    
+    .total-container {
+      text-align: right;
+      margin: 2rem 0;
+      padding: 1rem;
+      background-color: rgba(212, 160, 23, 0.05);
+      border-radius: 8px;
+    }
+    
+    .total-container p {
+      font-size: 1.3rem;
+      color: #333;
+      margin: 0;
+    }
+    
+    .total-container span {
+      color: #d4a017;
+      font-weight: 600;
+    }
+    
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      background: #d4a017;
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .checkout-btn:hover {
+      background: #b58a14;
+    }
+    
+    .empty-cart-message {
+      text-align: center;
+      padding: 2rem;
+      color: #7f8c8d;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">HivePure</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="process.html">Our Process</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="checkout.html" class="cart-icon">🛒 <span id="cart-count">0</span></a>
+    <div class="menu-icon">&#9776;</div>
+  </nav>
+
+  <!-- Checkout Content -->
+  <section id="checkout">
+    <h2>Your Shopping Cart</h2>
+    <div id="cart-items"></div>
+    <div class="total-container">
+      <p>Total: Rs.<span id="total">0.00</span></p>
+    </div>
+    <button class="checkout-btn" onclick="proceedToCustomerDetails()">Proceed to Checkout</button>
+  </section>
+
+  <script>
+    // Product images mapping (should match your products page)
+    const productImages = {
+      'Raw Honey - 250ml': 'images/honey_250ml_1.jpg',
+      'Raw Honey - 500ml': 'images/honey_500ml_1.jpg',
+      'Raw Honey - 1L': 'images/honey_1L_1.jpg',
+      'Organic Beeswax Candles': 'images/beeswax_1.jpg',
+      'Propolis Tincture': 'images/propolis_1.jpg',
+      'Bee Pollen': 'images/pollen_1.jpg'
+    };
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Function to display cart items with images
+    function displayCartItems() {
+      const cartItems = document.getElementById('cart-items');
+      const total = document.getElementById('total');
+      let html = '';
+      let totalAmount = 0;
+
+      cart.forEach((item, index) => {
+        const imageSrc = productImages[item.name] || 'images/default-product.jpg';
+        html += `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <img src="${imageSrc}" alt="${item.name}">
+              <div class="cart-item-details">
+                <h3>${item.name}</h3>
+                <p>Rs.${item.price.toFixed(2)}</p>
+              </div>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+        totalAmount += item.price;
+      });
+
+      if (cart.length === 0) {
+        html = '<div class="empty-cart-message">Your cart is empty</div>';
+        document.querySelector('.checkout-btn').style.display = 'none';
+      } else {
+        document.querySelector('.checkout-btn').style.display = 'block';
+      }
+
+      cartItems.innerHTML = html;
+      total.textContent = totalAmount.toFixed(2);
+    }
+
+    // Function to remove an item from the cart
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      displayCartItems();
+      updateCartCount();
+    }
+
+    // Function to proceed to customer details
+    function proceedToCustomerDetails() {
+      if (cart.length === 0) {
+        alert('Your cart is empty. Please add products before proceeding.');
+        return;
+      }
+      window.location.href = 'customer-details.html';
+    }
+
+    // Function to update the cart count
+    function updateCartCount() {
+      document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    // Display cart items when the page loads
+    window.onload = () => {
+      displayCartItems();
+      updateCartCount();
+    };
+  </script>
+</body>
+</html>
